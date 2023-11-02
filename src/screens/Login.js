@@ -1,60 +1,125 @@
-import { View, Text, Image } from 'react-native'
-import React, { useEffect } from 'react'
-import { StatusBar } from 'expo-status-bar'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, ScrollView, Image, TextInput, Pressable, ImageBackground } from 'react-native';
+import React, { useEffect, useState } from 'react';
 
-export default function Feed({ navigation }) {
+
+export default function HomeScreen() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState();
 
   const handleLogin = () => {
+    // Add your authentication logic here
+    // For now, let's log the email and password
     console.log('E-mail:', email);
     console.log('Senha:', password);
   };
 
   const handleRegister = () => {
+    // Navigate to the registration screen (Cadastro.js)
     navigation.navigate('Cadastro');
   };
 
   return (
-    <div className="bg-cover min-h-screen flex items-center justify-center bg-image4">
-      <div className="w-full max-w-xs bg-white p-6 rounded-lg">
-        <img
-          src={require('../../assets/images/logo_nome.png')}
-          className="w-24 h-24 mx-auto mb-6"
-          alt="Logo"
+    <ImageBackground
+      source={require('../../assets/images/image4.png')}
+      style={{
+        flex: 1,
+        width: '100%',
+        height: '100%',
+      }}
+    >
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <Image
+          source={require('../../assets/images/logo_nome.png')}
+          style={{
+            width: 150,
+            height: 150,
+          }}
+          resizeMode="contain"
         />
-        <input
-          type="text"
-          className="w-full h-10 border rounded-lg mb-4 px-2"
+        <TextInput
+          style={{
+            width: '80%',
+            height: 40,
+            borderColor: 'gray',
+            borderWidth: 1,
+            borderRadius: 10,
+            marginBottom: 10,
+            paddingHorizontal: 10,
+            backgroundColor: '#fff',
+          }}
           placeholder="E-mail"
-          onChange={(e) => setEmail(e.target.value)}
+          onChangeText={(text) => setEmail(text)}
           value={email}
         />
-        <input
-          type="password"
-          className="w-full h-10 border rounded-lg mb-4 px-2"
+        <TextInput
+          style={{
+            width: '80%',
+            height: 40,
+            borderColor: 'gray',
+            borderWidth: 1,
+            borderRadius: 10,
+            marginBottom: 10,
+            paddingHorizontal: 10,
+            backgroundColor: '#fff',
+          }}
           placeholder="Senha"
-          onChange={(e) => setPassword(e.target.value)}
+          secureTextEntry
+          onChangeText={(text) => setPassword(text)}
           value={password}
         />
-        <div className="flex space-x-4">
-          <button
-            className="w-1/2 bg-blue-900 text-white p-2 rounded-lg"
-            onClick={handleLogin}
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: 10,
+        }}>
+        </View>
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '80%',
+        }}>
+          <Pressable
+            style={{
+              backgroundColor: '#010922',
+              paddingVertical: 8,
+              paddingHorizontal: 30,
+              borderRadius: 10,
+              flex: 1,
+              marginRight: 5,
+            }}
+            onPress={handleLogin}
           >
-            Login
-          </button>
-          <button
-            className="w-1/2 bg-blue-900 text-white p-2 rounded-lg"
-            onClick={handleRegister}
+            <Text style={{
+              color: '#fff',
+              fontSize: 15,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>Login</Text>
+          </Pressable>
+          <Pressable
+            style={{
+              backgroundColor: '#010922',
+              paddingVertical: 8,
+              paddingHorizontal: 30,
+              borderRadius: 10,
+              flex: 1,
+              marginLeft: 5,
+            }}
+            onPress={handleRegister}
           >
-            Cadastrar
-          </button>
-        </div>
-      </div>
-    </div>
+            <Text style={{
+              color: '#fff',
+              fontSize: 15,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>Cadastrar</Text>
+          </Pressable>
+        </View>
+      </View>
+    </ImageBackground>
   );
 }
