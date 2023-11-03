@@ -7,14 +7,13 @@ export default function HomeScreen() {
   const [password, setPassword] = useState();
 
   const handleLogin = () => {
-    // Add your authentication logic here
-    // For now, let's log the email and password
+
     console.log('E-mail:', email);
     console.log('Senha:', password);
   };
 
   const handleRegister = () => {
-    // Navigate to the registration screen (Cadastro.js)
+
     navigation.navigate('Cadastro');
   };
 
