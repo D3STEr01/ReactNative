@@ -18,7 +18,7 @@ export default function WelcomeScreen() {
         setTimeout(() => ring1padding.value = withSpring(ring1padding.value + hp(5)), 100);
         setTimeout(() => ring2padding.value = withSpring(ring2padding.value + hp(5.5)), 300);
 
-        setTimeout(() => navigation.navigate('Login'), 2500) // Change 'Home' to 'Login'
+        setTimeout(() => navigation.navigate('Cadastro'), 2500) // Change 'Home' to 'Login'
     }, [])
 
     return (

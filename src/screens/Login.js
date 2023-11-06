@@ -1,21 +1,57 @@
-import { View, Text, ScrollView, Image, TextInput, Pressable, ImageBackground } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { View, Text, Image, TextInput, Pressable, ImageBackground } from 'react-native';
+import axios from '../api/axios';
+import { useNavigate } from 'react-router-dom';
+import { user_login } from '../api/user_api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-export default function HomeScreen() {
+export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState('');
+
+  const handleCheckEmail = (text) => {
+    setEmail(text);
+  };
+
+  const checkPasswordValidity = (value) => {
+    const isNonWhiteSpace = /^\S*$/;
+    if (!isNonWhiteSpace.test(value)) {
+      return 'Password must not contain whitespace.';
+    }
+    const isContainsNumber = /^(?=.*[0-9]).*$/;
+    if (!isContainsNumber.test(value)) {
+      return 'Password must have at least one number.';
+    }
+    const isValidLength = /^.{6,200}$/;
+    if (!isValidLength.test(value)) {
+      return 'Password must be between 6 and 200 characters.';
+    }
+
+    return null;
+  };
 
   const handleLogin = () => {
-
-    console.log('E-mail:', email);
-    console.log('Senha:', password);
+    const checkPassword = checkPasswordValidity(password);
+    if (!checkPassword) {
+      user_login({
+        email: email.toLocaleLowerCase(),
+        password: password,
+      }).then((result) => {
+        console.log(result);
+        if (result.status === 200) {
+          AsyncStorage.setItem('AccessToken', result.data.token);
+          navigation.replace('Home');
+        }
+      });
+    } else {
+      alert(checkPassword);
+    }
   };
 
   const handleRegister = () => {
-
+    // Navegar para a tela de cadastro (Cadastro.js)
     navigation.navigate('Cadastro');
-  };
+  };  
 
   return (
     <ImageBackground
@@ -26,11 +62,13 @@ export default function HomeScreen() {
         height: '100%',
       }}
     >
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <Image
           source={require('../../assets/images/logo_nome.png')}
           style={{
@@ -40,85 +78,56 @@ export default function HomeScreen() {
           resizeMode="contain"
         />
         <TextInput
-          style={{
-            width: '80%',
-            height: 40,
-            borderColor: 'gray',
-            borderWidth: 1,
-            borderRadius: 10,
-            marginBottom: 10,
-            paddingHorizontal: 10,
-            backgroundColor: '#fff',
-          }}
+          style={styles.input}
           placeholder="E-mail"
-          onChangeText={(text) => setEmail(text)}
           value={email}
+          onChangeText={(text) => handleCheckEmail(text)}
         />
         <TextInput
-          style={{
-            width: '80%',
-            height: 40,
-            borderColor: 'gray',
-            borderWidth: 1,
-            borderRadius: 10,
-            marginBottom: 10,
-            paddingHorizontal: 10,
-            backgroundColor: '#fff',
-          }}
+          style={styles.input}
           placeholder="Senha"
-          secureTextEntry
-          onChangeText={(text) => setPassword(text)}
           value={password}
+          onChangeText={(text) => setPassword(text)}
         />
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginBottom: 10,
-        }}>
-        </View>
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: '80%',
-        }}>
-          <Pressable
-            style={{
-              backgroundColor: '#010922',
-              paddingVertical: 8,
-              paddingHorizontal: 30,
-              borderRadius: 10,
-              flex: 1,
-              marginRight: 5,
-            }}
-            onPress={handleLogin}
-          >
-            <Text style={{
-              color: '#fff',
-              fontSize: 15,
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}>Login</Text>
+        <Pressable
+          style={styles.button}
+          onPress={handleLogin}
+        >
+          <Text style={styles.buttonText}>Login</Text>
+        </Pressable>
+        {/* A Pressable para o registro ainda está presente, mas requer a definição de handleRegister */}
+          <Pressable onPress={handleRegister}>
+            <Text className="mt-5">
+              Não possui conta? Cadastre-se aqui!
+            </Text>
           </Pressable>
-          <Pressable
-            style={{
-              backgroundColor: '#010922',
-              paddingVertical: 8,
-              paddingHorizontal: 30,
-              borderRadius: 10,
-              flex: 1,
-              marginLeft: 5,
-            }}
-            onPress={handleRegister}
-          >
-            <Text style={{
-              color: '#fff',
-              fontSize: 15,
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}>Cadastrar</Text>
-          </Pressable>
-        </View>
       </View>
     </ImageBackground>
   );
 }
+
+const styles = {
+  input: {
+    width: '80%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+  },
+  button: {
+    backgroundColor: '#010922',
+    paddingVertical: 8,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    marginRight: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+};
