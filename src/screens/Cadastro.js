@@ -18,8 +18,8 @@ const Logastro = () => {
 
     const [err, setErr] = useState("");
 
-    const handleChangeRegister = (field, value) => {
-        setInputsRegister(prev => ({ ...prev, [field]: value }));
+    const handleChangeRegister = (input, field, value) => {
+        input(prev => ({ ...prev, [field]: value }));
     };
 
     const handleSubmitRegister = async () => {
@@ -78,7 +78,7 @@ const Logastro = () => {
                             style={styles.input}
                             placeholder="Nome de usuário"
                             onBlur={onBlur}
-                            onChangeText={(text) => onChange(text)}
+                            onChangeText={(text) => handleChangeRegister(setInputsRegister, "use_name", text)}
                             value={value}
                         />
                     )}
@@ -94,7 +94,7 @@ const Logastro = () => {
                             style={styles.input}
                             placeholder="E-mail"
                             onBlur={onBlur}
-                            onChangeText={(text) => onChange(text)}
+                            onChangeText={(text) => handleChangeRegister(setInputsRegister, "use_email", text)}
                             value={value}
                         />
                     )}
