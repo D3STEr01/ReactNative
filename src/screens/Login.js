@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, Image, TextInput, Pressable, ImageBackground } from 'react-native';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-import { user_login } from '../api/user_api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login({ navigation }) {
@@ -30,23 +29,15 @@ export default function Login({ navigation }) {
     return null;
   };
 
-  const handleLogin = () => {
-    const checkPassword = checkPasswordValidity(password);
-    if (!checkPassword) {
-      user_login({
-        email: email.toLocaleLowerCase(),
-        password: password,
-      }).then((result) => {
-        console.log(result);
-        if (result.status === 200) {
-          AsyncStorage.setItem('AccessToken', result.data.token);
-          navigation.replace('Home');
-        }
-      });
-    } else {
-      alert(checkPassword);
+  const handleSubmitLogin = async (data) => {
+    try {   
+        await login(inputsLogin)
+        navigate('/Home')
+    } catch (err) {
+        console.log(err)
+        setErr("Houve um problema")
     }
-  };
+}
 
   const handleRegister = () => {
     // Navegar para a tela de cadastro (Cadastro.js)
