@@ -7,7 +7,7 @@ export const NaoLogado = () => {
     console.log("testando")
     
     return (
-        currentUser ? <Navigate to='/desktop'/> : ""
+        currentUser ? <Navigate to='/Home'/> : ""
     )
 }
 

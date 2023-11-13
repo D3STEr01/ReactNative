@@ -1,48 +1,47 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, Pressable, ImageBackground } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
+import moment from 'moment';
 import axios from '../api/axios';
-import { useNavigate } from 'react-router-dom';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Login({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const LoginScreen = ({navigation}) => {
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    mode: "onTouched"
+  });
 
-  const handleCheckEmail = (text) => {
-    setEmail(text);
-  };
+  const [inputsLogin, setInputsLogin] = useState({
+    use_email: "",
+    use_password: ""
+  });
 
-  const checkPasswordValidity = (value) => {
-    const isNonWhiteSpace = /^\S*$/;
-    if (!isNonWhiteSpace.test(value)) {
-      return 'Password must not contain whitespace.';
-    }
-    const isContainsNumber = /^(?=.*[0-9]).*$/;
-    if (!isContainsNumber.test(value)) {
-      return 'Password must have at least one number.';
-    }
-    const isValidLength = /^.{6,200}$/;
-    if (!isValidLength.test(value)) {
-      return 'Password must be between 6 and 200 characters.';
-    }
+  const [err, setErr] = useState("");
 
-    return null;
+  const handleChangeLogin = (data) => {
+    setInputsLogin(prev => ({
+      ...prev,
+      use_email: data.use_email,
+      use_password: data.use_password
+    }));
   };
 
   const handleSubmitLogin = async (data) => {
+    handleChangeLogin(data);
     try {   
         await login(inputsLogin)
         navigate('/Home')
     } catch (err) {
-        console.log(err)
-        setErr("Houve um problema")
-    }
-}
+        console.log(err);
+        setErr(err.response?.data || "An error occurred.");
+        console.log("Server response:", err.response?.data);
+      }      
+  };
 
-  const handleRegister = () => {
-    // Navegar para a tela de cadastro (Cadastro.js)
+  const handleRegisterPress = () => {
+    // Navigate to the registration screen
+    // Replace 'Register' with the actual name of your registration screen
     navigation.navigate('Cadastro');
-  };  
+  };
 
   return (
     <ImageBackground
@@ -68,34 +67,54 @@ export default function Login({ navigation }) {
           }}
           resizeMode="contain"
         />
-        <TextInput
-          style={styles.input}
-          placeholder="E-mail"
-          value={email}
-          onChangeText={(text) => handleCheckEmail(text)}
+
+        <Controller
+          control={control}
+          render={({ field: { onBlur, onChange, value } }) => (
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              onBlur={onBlur}
+              onChangeText={(text) => onChange(text)}
+              value={value}
+            />
+          )}
+          name="use_email"
+          rules={{ required: "Email is required" }}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
+
+        <Controller
+          control={control}
+          render={({ field: { onBlur, onChange, value } }) => (
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              onBlur={onBlur}
+              onChangeText={(text) => onChange(text)}
+              value={value}
+            />
+          )}
+          name="use_password"
+          rules={{ required: "Password is required" }}
         />
+        {errors.use_password && <Text style={styles.errorText}>{errors.use_password.message}</Text>}
+
         <Pressable
           style={styles.button}
-          onPress={handleLogin}
+          onPress={handleSubmit(handleSubmitLogin)}
         >
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
-        {/* A Pressable para o registro ainda está presente, mas requer a definição de handleRegister */}
-          <Pressable onPress={handleRegister}>
-            <Text className="mt-5">
-              Não possui conta? Cadastre-se aqui!
-            </Text>
-          </Pressable>
+
+        <Pressable onPress={handleRegisterPress}>
+          <Text className="mt-5 text-lg text-white tracking-widest">
+            Cadastrar-se
+          </Text>
+        </Pressable>
       </View>
     </ImageBackground>
   );
-}
+};
 
 const styles = {
   input: {
@@ -121,4 +140,9 @@ const styles = {
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  errorText: {
+    color: 'red',
+  },
 };
+
+export default LoginScreen;
