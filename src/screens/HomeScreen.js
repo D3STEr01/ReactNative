@@ -3,7 +3,6 @@ import { View, Text, ScrollView, Image, TextInput, Pressable, Modal } from 'reac
 import { StatusBar } from 'expo-status-bar';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { BellIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
-import axios from 'axios';
 import ModalLogout from '../components/ModalLogout'; // Importe o componente ModalLogout
 
 

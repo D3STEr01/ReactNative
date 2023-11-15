@@ -1,11 +1,12 @@
 import { createContext, useEffect, useState } from 'react';
 import axios from '../api/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext()
 
 export const AuthContextProvider = ({children})=> {
-    const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user') || null))
+    const [currentUser, setCurrentUser] = useState(JSON.parse(parseInt(AsyncStorage.getItem('user')) || null))
 
     const login = async (inputs) => {
         const res = await axios.post("/api/login", inputs)
@@ -68,7 +69,7 @@ export const AuthContextProvider = ({children})=> {
       }
 
     useEffect(() => {
-        localStorage.setItem('user', JSON.stringify(currentUser))
+      AsyncStorage.setItem('user', JSON.stringify(currentUser));
     }, [currentUser])
 
     return (

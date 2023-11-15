@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, Image, TextInput, Pressable, ImageBackground } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
-import moment from 'moment';
-import axios from '../api/axios';
+import { AuthContext } from '../contexts/AuthContext';
 
-const LoginScreen = ({navigation}) => {
+
+
+const LoginScreen = () => {
+
+  const navigation = useNavigation()
+
+  const { currentUser, setCurrentUser, login } = useContext(AuthContext)
+
   const { control, handleSubmit, formState: { errors } } = useForm({
     mode: "onTouched"
   });
 
   const [inputsLogin, setInputsLogin] = useState({
-    use_email: "",
-    use_password: ""
+    email_login: "",
+    password_login: ""
   });
 
   const [err, setErr] = useState("");
@@ -29,7 +35,7 @@ const LoginScreen = ({navigation}) => {
     handleChangeLogin(data);
     try {   
         await login(inputsLogin)
-        navigate('/Home')
+        navigation.navigate('Home')
     } catch (err) {
         console.log(err);
         setErr(err.response?.data || "An error occurred.");

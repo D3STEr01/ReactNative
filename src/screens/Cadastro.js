@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, Pressable, ImageBackground } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import axios from '../api/axios';
 
