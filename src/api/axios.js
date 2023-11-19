@@ -2,7 +2,7 @@ import axios from "axios"
 
 
 export default axios.create({
-    baseURL: 'https://e292-2804-431-c7da-a991-3431-320a-95e5-9999.ngrok-free.app',
+    baseURL: 'https://5f2e-2804-431-c7db-9979-50c5-6bde-58e4-47c.ngrok-free.app',
     withCredentials: true,
     headers: {
         "Content-type": "application/json",

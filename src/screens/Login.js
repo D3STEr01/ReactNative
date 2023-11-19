@@ -1,20 +1,19 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, Image, TextInput, Pressable, ImageBackground } from 'react-native';
-import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../contexts/AuthContext';
+import ModalError from '../components/modalError';
 
 
 
 const LoginScreen = () => {
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const navigation = useNavigation()
 
-  const { currentUser, setCurrentUser, login } = useContext(AuthContext)
+  const { login } = useContext(AuthContext)
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
-    mode: "onTouched"
-  });
 
   const [inputsLogin, setInputsLogin] = useState({
     email_login: "",
@@ -23,31 +22,31 @@ const LoginScreen = () => {
 
   const [err, setErr] = useState("");
 
-  const handleChangeLogin = (data) => {
-    setInputsLogin(prev => ({
-      ...prev,
-      use_email: data.use_email,
-      use_password: data.use_password
+  const handleChangeLogin = (value, name) => {
+    console.log(value);
+    setInputsLogin((prevData) => ({
+      ...prevData,
+      [name]: value,
     }));
   };
 
   const handleSubmitLogin = async (data) => {
-    handleChangeLogin(data);
     try {   
-        await login(inputsLogin)
-        navigation.navigate('Home')
+      await login(inputsLogin)
+      navigation.navigate('Home')
     } catch (err) {
         console.log(err);
+        setIsModalVisible(true);
         setErr(err.response?.data || "An error occurred.");
         console.log("Server response:", err.response?.data);
       }      
   };
 
   const handleRegisterPress = () => {
-    // Navigate to the registration screen
-    // Replace 'Register' with the actual name of your registration screen
     navigation.navigate('Cadastro');
   };
+
+
 
   return (
     <ImageBackground
@@ -73,41 +72,27 @@ const LoginScreen = () => {
           }}
           resizeMode="contain"
         />
-
-        <Controller
-          control={control}
-          render={({ field: { onBlur, onChange, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              onBlur={onBlur}
-              onChangeText={(text) => onChange(text)}
-              value={value}
-            />
-          )}
-          name="use_email"
-          rules={{ required: "Email is required" }}
+        
+        <TextInput
+          placeholder="Email"
+          style={styles.input}
+          onChangeText={(text) => handleChangeLogin(text,'email_login')}
+          value={inputsLogin.email_login}
         />
 
-        <Controller
-          control={control}
-          render={({ field: { onBlur, onChange, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              onBlur={onBlur}
-              onChangeText={(text) => onChange(text)}
-              value={value}
-            />
-          )}
-          name="use_password"
-          rules={{ required: "Password is required" }}
+        <TextInput
+          placeholder="Senha"
+          style={styles.input}
+          onChangeText={(text) => handleChangeLogin(text,'password_login')}
+          value={inputsLogin.password_login}
         />
-        {errors.use_password && <Text style={styles.errorText}>{errors.use_password.message}</Text>}
-
+        <ModalError
+          isModalVisible={isModalVisible}
+          buttonAction={()=>setIsModalVisible(false)}
+        />
         <Pressable
           style={styles.button}
-          onPress={handleSubmit(handleSubmitLogin)}
+          onPress={handleSubmitLogin}
         >
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>

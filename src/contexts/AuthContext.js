@@ -8,10 +8,10 @@ export const AuthContext = createContext()
 export const AuthContextProvider = ({children})=> {
     const [currentUser, setCurrentUser] = useState(JSON.parse(parseInt(AsyncStorage.getItem('user')) || null))
 
-    const login = async (inputs) => {
+    async function login (inputs){
+        console.log('inputs', inputs);
         const res = await axios.post("/api/login", inputs)
         const userData = res.data;
-        
         if (userData.use_lastDesktop !== null) {
             const use_id = userData.use_id
             const des_id = userData.use_lastDesktop
