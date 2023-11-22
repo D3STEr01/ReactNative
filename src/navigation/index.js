@@ -6,6 +6,7 @@ import Login from '../screens/Login';
 import Cadastro from '../screens/Cadastro';
 import HomeScreen from '../screens/HomeScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
+import Start from '../screens/StartScreen';
 
 
 
@@ -17,6 +18,7 @@ function AppNavigation() {
     <AuthContextProvider>
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Welcome' screenOptions={{headerShown: false}}>
+        <Stack.Screen name='Start' component={Start} />
         <Stack.Screen name='Login' component={Login} />
         <Stack.Screen name='Cadastro' component={Cadastro} />
         <Stack.Screen name="Home" component={HomeScreen} />
