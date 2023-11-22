@@ -1,20 +1,35 @@
-// Card.js
+// CardComponent.js
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { View, Text, StyleSheet } from 'react-native';
 
-const Card = ({ title, onPress }) => {
+const CardComponent = ({ title, description }) => {
   return (
-    <Pressable onPress={onPress} style={{  marginTop: 10, alignItems:'center' }}>
-      <View style={{ backgroundColor: 'white', borderRadius: 10, borderColor: '#D3D3D3', borderWidth: 1, elevation: 2 }}>
-        {/* Remove the Image component as it was empty in the provided code */}
-        <View style={{ padding: 50 }}>
-          <Text style={{ fontSize: hp(2), fontWeight: 'bold', marginBottom: 8}}>{title}</Text>
-          {/* Add more card content here if needed */}
-        </View>
-      </View>
-    </Pressable>
+    <View style={styles.cardContainer}>
+      <Text style={styles.cardTitle}>{title}</Text>
+      <Text style={styles.cardDescription}>{description}</Text>
+    </View>
   );
 };
 
-export default Card;
+const styles = StyleSheet.create({
+  cardContainer: {
+    marginTop: 10,
+    backgroundColor: 'lightgray',
+    padding: 35,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  cardTitle: {
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  cardDescription: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: 'gray',
+  },
+});
+
+export default CardComponent;

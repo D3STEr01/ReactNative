@@ -57,8 +57,7 @@ const Logastro = ({ navigation }) => {
   };
 
   const handleLoginPress = () => {
-    // Navigate to the registration screen
-    // Replace 'Register' with the actual name of your registration screen
+    // Navigate 
     navigation.navigate("Login");
   };
 
@@ -99,7 +98,7 @@ const Logastro = ({ navigation }) => {
             />
           )}
           name="use_name"
-          rules={{ required: "Username is required" }}
+          rules={{ required: "Username is required", minLength: 3 }}
         />
         {errors.use_name && (
           <Text style={styles.errorText}>{errors.use_name.message}</Text>
@@ -117,7 +116,7 @@ const Logastro = ({ navigation }) => {
             />
           )}
           name="use_email"
-          rules={{ required: "Email is required" }}
+          rules={{ required: "Email is required", minLength: 6 }}
         />
         {errors.use_email && (
           <Text style={styles.errorText}>{errors.use_email.message}</Text>

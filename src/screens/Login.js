@@ -37,7 +37,6 @@ const LoginScreen = () => {
     try {
       await login(inputsLogin);
       navigation.navigate("Home");
-      console.log('boa mlk')
     } catch (err) {
       console.log(err);
       setIsModalVisible(true);
