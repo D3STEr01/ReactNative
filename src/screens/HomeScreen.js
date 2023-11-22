@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, ScrollView, Image, TextInput, Pressable, Modal } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { BellIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import ModalLogout from '../components/ModalLogout'; // Importe o componente ModalLogout
+import { AuthContext } from "../contexts/AuthContext";
 
 
 export default function HomeScreen() {
+  const { currentUser, logout } = useContext(AuthContext)
   const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -31,8 +33,8 @@ export default function HomeScreen() {
 
         {/* greetings and punchline */}
         <View style={{ marginHorizontal: 16, marginBottom: 10 }}>
-          <Text style={{ fontSize: hp(1.7), color: 'gray' }}>Hello, Noman!</Text>
-          <Text style={{ fontSize: hp(3.8), fontWeight: 'bold', color: 'gray' }}>Olá, é bom ver você por aqui!</Text>
+          <Text style={{ fontSize: hp(2), color: 'gray' }}>Olá, {currentUser?.use_name}!</Text>
+          <Text style={{ fontSize: hp(3), fontWeight: 'bold', color: 'gray' }}>É bom ver você por aqui!</Text>
         </View>
 
         {/* search bar */}
@@ -48,7 +50,7 @@ export default function HomeScreen() {
         </View>
 
         <View>
-          <Text>AAAAAAAAAAA</Text>
+          
         </View>
 
         {/* Modal de Logout */}

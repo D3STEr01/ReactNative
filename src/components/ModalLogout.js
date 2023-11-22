@@ -1,13 +1,10 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 
-const ModalLogout = ({ closeModal }) => {
+const ModalLogout = ({ closeModal, logout, navigate }) => {
   const handleLogout = () => {
-    // Implemente a lógica de logout aqui
-    // Exemplo: chame a API de logout e limpe os tokens de autenticação
-    // Após o logout, você pode redirecionar para a tela de login ou fazer qualquer outra ação necessária
-
-    // Feche a modal após o logout
+    logout();
+    navigate('Login');
     closeModal();
   };
 
