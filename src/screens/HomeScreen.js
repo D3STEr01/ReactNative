@@ -7,6 +7,7 @@ import {
   TextInput,
   Pressable,
   Modal,
+  Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -16,9 +17,17 @@ import {
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { AuthContext } from "../contexts/AuthContext";
 import CardComponent from "../components/card";
+import { useLocation } from "@react-navigation/native";
+import axios from "../api/axios";
+import ModalCreate from "../components/ModalCreate";
 
 export default function HomeScreen() {
   const { currentUser, logout } = useContext(AuthContext);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible); // Inverte o estado da modal ao chamar a função
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -92,6 +101,17 @@ export default function HomeScreen() {
           </View>
         </View>
       </ScrollView>
+      <View className="absolute bottom-20 ml-auto">
+        <Pressable onPress={toggleModal}>
+          <View className="bg-azul-button w-20 h-20 ml-72 rounded-full flex justify-center items-center">
+            <Text className="text-white text-2xl">+</Text>
+          </View>
+        </Pressable>
+        <ModalCreate
+          isModalVisible={isModalVisible}
+          buttonAction={() => setModalVisible(false)}
+        />
+      </View>
     </View>
   );
 }
