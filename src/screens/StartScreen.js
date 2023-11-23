@@ -107,11 +107,11 @@ const Welcome = ({ navigation }) => {
                             fontSize: 16,
                             color: COLORS.white,
                             marginVertical: 4
-                        }}>Gerencie suas tarefas e atividades diarias</Text>
+                        }}>Gerencie suas tarefas e atividades diárias</Text>
                         <Text style={{
                             fontSize: 16,
                             color: COLORS.white,
-                        }}>Uso grátis, não precisa adicionar cartão</Text>
+                        }}>Teste grátis! Não é necessário cartão de crédito.</Text>
                     </View>
 
                     <Button
