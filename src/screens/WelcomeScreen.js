@@ -44,26 +44,11 @@ export default function WelcomeScreen() {
         >
           <Image
             source={require("../../assets/images/welcome.png")}
-            style={{ width: hp(20), height: hp(20) }}
+            style={{ width: hp(55), height: hp(55) }}
           />
         </Animated.View>
       </Animated.View>
 
-      {/* title and punchline */}
-      <View className="flex items-center space-y-2">
-        <Text
-          style={{ fontSize: hp(7) }}
-          className="font-bold text-white tracking-widest"
-        >
-          Focus
-        </Text>
-        <Text
-          style={{ fontSize: hp(2) }}
-          className=" text-lg text-white tracking-widest"
-        >
-          Task
-        </Text>
-      </View>
     </View>
   );
 }

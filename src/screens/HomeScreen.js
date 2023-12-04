@@ -6,8 +6,6 @@ import {
   Image,
   TextInput,
   Pressable,
-  Modal,
-  Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -17,16 +15,23 @@ import {
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { AuthContext } from "../contexts/AuthContext";
 import CardComponent from "../components/card";
-import { useLocation } from "@react-navigation/native";
-import axios from "../api/axios";
 import ModalCreate from "../components/ModalCreate";
 
 export default function HomeScreen() {
   const { currentUser, logout } = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [cards, setCards] = useState([]);
 
   const toggleModal = () => {
-    setModalVisible(!isModalVisible); // Inverte o estado da modal ao chamar a função
+    setModalVisible(!isModalVisible);
+  };
+
+  const handleCreateCard = (title, description) => {
+    if (title && description) {
+      const newCard = { title, description };
+      setCards([newCard, ...cards]); // Add the new card to the beginning of the array
+      setModalVisible(false);
+    }
   };
 
   return (
@@ -34,7 +39,7 @@ export default function HomeScreen() {
       <StatusBar style="dark" />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 50 }}
+        contentContainerStyle={{ paddingBottom: 180 }}
         style={{ paddingTop: hp(14) }}
       >
         {/* avatar and bell icon */}
@@ -88,30 +93,47 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* main conteudo */}
+        {/* main content */}
         <View style={{ flex: 1 }}>
-          {/* main conteudo */}
+          <View>
+          <Text style={{ fontSize: hp(2.5), fontWeight: "bold", color: "gray", textAlign:'center', marginBottom:10 }}>
+            Áreas de trabalho
+          </Text>
+          </View>
           <View style={{ marginHorizontal: 16 }}>
-            <CardComponent title="Area 1" description="Fatec" />
-            <CardComponent title="Area 2" description="Trabalho" />
-            <CardComponent title="Area 3" description="Pessoal" />
-            <CardComponent title="Area 4" description="Pessoal" />
-            <CardComponent title="Area 5" description="Pessoal" />
-            <CardComponent title="Area 6" description="Pessoal" />
+            {/* Render existing cards */}
+            {cards.map((card, index) => (
+              <CardComponent
+                key={index}
+                title={card.title}
+                description={card.description}
+              />
+            ))}
           </View>
         </View>
       </ScrollView>
-      <View className="absolute bottom-20 ml-auto">
+      <View
+        style={{ position: "absolute", bottom: 20, left: "auto", right: 16 }}
+      >
         <Pressable onPress={toggleModal}>
-          <View className="bg-azul-button w-20 h-20 ml-72 rounded-full flex justify-center items-center">
-            <Text className="text-white text-2xl">+</Text>
+          <View
+            style={{
+              backgroundColor: "#8080D7",
+              width: 70,
+              height: 70,
+              borderRadius: 30,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 24 }}>+</Text>
           </View>
         </Pressable>
-        <ModalCreate
-          isModalVisible={isModalVisible}
-          buttonAction={() => setModalVisible(false)}
-        />
       </View>
+      <ModalCreate
+        isModalVisible={isModalVisible}
+        buttonAction={handleCreateCard}
+      />
     </View>
   );
 }

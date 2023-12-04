@@ -1,49 +1,65 @@
-import React from "react";
-import { View, Text, Button, Pressable, TextInput } from "react-native";
+import React, { useState } from "react";
+import { View, Text, Pressable, TextInput } from "react-native";
 import Modal from "react-native-modal";
 import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp,
-  } from "react-native-responsive-screen";
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
-function ModalCreate({ isModalVisible, buttonAction }) {
+const ModalCreate = ({ isModalVisible, buttonAction }) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleConfirm = () => {
+    if (title && description) {
+      buttonAction(title, description);
+      // Clear input fields
+      setTitle("");
+      setDescription("");
+    }
+  };
+
   return (
     <Modal isVisible={isModalVisible}>
-      <View className="bg-white p-4">
-        <Text className="text-2xl text-center mb-4">Criar Area</Text>
+      <View style={{ backgroundColor: "white", padding: 16 }}>
+        <Text style={{ fontSize: hp(2), fontWeight: "bold", textAlign: "center", marginBottom: hp(2) }}>
+          Criar Área
+        </Text>
         <TextInput
-          style="w-full h-40 border-2 border-gray-300 rounded-md mb-4 px-4 bg-white"
-          placeholder="Titulo"
+          style={{ height: hp(7), border: "2px solid gray", borderRadius: hp(2), marginBottom: hp(2), paddingHorizontal: hp(2), backgroundColor: "white" }}
+          placeholder="Título"
+          value={title}
+          onChangeText={(text) => setTitle(text)}
         />
         <TextInput
-          style="w-full h-40 border-2 border-gray-300 rounded-md mb-4 px-4 bg-white"
+          style={{ height: hp(7), border: "2px solid gray", borderRadius: hp(2), marginBottom: hp(2), paddingHorizontal: hp(2), backgroundColor: "white" }}
           placeholder="Descrição"
+          value={description}
+          onChangeText={(text) => setDescription(text)}
         />
-        <Pressable style={styles.button} onPress={buttonAction} title={"OK"}>
-          <Text style={styles.buttonText}>Confirmar</Text>
+        <Pressable
+          style={{
+            marginTop: hp(2),
+            backgroundColor: "#010922",
+            paddingVertical: hp(1),
+            paddingHorizontal: hp(4),
+            borderRadius: hp(1),
+            marginRight: hp(1),
+          }}
+          onPress={handleConfirm}
+        >
+          <Text style={{ color: "#fff", fontSize: hp(1.5), fontWeight: "bold", textAlign: "center" }}>
+            Confirmar
+          </Text>
         </Pressable>
-        <Pressable  onPress={buttonAction} title={"OK"}>
-        <Text style={{ fontSize: hp(2), fontWeight: "bold", color: "gray", textAlign: 'center', marginTop:10 }}>Cancelar</Text>
+        <Pressable onPress={() => buttonAction("")}>
+          <Text style={{ fontSize: hp(1.5), fontWeight: "bold", color: "gray", textAlign: 'center', marginTop: hp(2) }}>
+            Cancelar
+          </Text>
         </Pressable>
       </View>
     </Modal>
   );
-}
-const styles = {
-  button: {
-    marginTop: 20,
-    backgroundColor: "#010922",
-    paddingVertical: 8,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-    marginRight: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 15,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
 };
 
 export default ModalCreate;
