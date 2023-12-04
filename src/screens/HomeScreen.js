@@ -16,14 +16,20 @@ import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { AuthContext } from "../contexts/AuthContext";
 import CardComponent from "../components/card";
 import ModalCreate from "../components/ModalCreate";
+import Navbar from "../components/Navbar";
 
 export default function HomeScreen() {
   const { currentUser, logout } = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isNavbarVisible, setNavbarVisible] = useState(false);
   const [cards, setCards] = useState([]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+  };
+
+  const toggleNavbar = () => {
+    setNavbarVisible(!isNavbarVisible);
   };
 
   const handleCreateCard = (title, description) => {
@@ -52,10 +58,12 @@ export default function HomeScreen() {
             marginBottom: 10,
           }}
         >
+          <Pressable onPress={toggleNavbar}>
           <Image
             source={require("../../assets/images/avatar.png")}
             style={{ height: hp(5), width: hp(5.5), borderRadius: hp(2.75) }}
           />
+          </Pressable>
           <BellIcon size={hp(4)} color="gray" />
         </View>
 
@@ -134,6 +142,11 @@ export default function HomeScreen() {
         isModalVisible={isModalVisible}
         buttonAction={handleCreateCard}
       />
+      <Navbar
+       isVisible={isNavbarVisible}
+        onClose={toggleNavbar}
+      />
+      
     </View>
   );
 }
