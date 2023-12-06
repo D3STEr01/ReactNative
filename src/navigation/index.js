@@ -7,6 +7,7 @@ import Cadastro from '../screens/Cadastro';
 import HomeScreen from '../screens/HomeScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import Start from '../screens/StartScreen';
+import Perfil from '../screens/Perfil';
 
 
 
@@ -22,6 +23,7 @@ function AppNavigation() {
         <Stack.Screen name='Login' component={Login} />
         <Stack.Screen name='Cadastro' component={Cadastro} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Perfil" component={Perfil} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
