@@ -48,8 +48,6 @@ const Navbar = ({ isVisible, onClose}) => {
 
         {/* Navbar content goes here */}
         <View style={{ alignItems: 'center', marginTop: 40, }}>
-          <Text style={{ fontSize: hp(3), fontWeight: "bold", color: "gray", marginBottom: 20 }}>Menu</Text>
-          <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray', width: '80%', marginBottom: 20 }} />
           {/* Add more navbar items here */}
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuText}>Favoritos</Text>
