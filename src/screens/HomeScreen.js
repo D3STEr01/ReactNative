@@ -18,7 +18,7 @@ import CardComponent from "../components/card";
 import ModalCreate from "../components/ModalCreate";
 import Navbar from "../components/Navbar";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const { currentUser, logout } = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isNavbarVisible, setNavbarVisible] = useState(false);
@@ -35,9 +35,13 @@ export default function HomeScreen() {
   const handleCreateCard = (title, description) => {
     if (title && description) {
       const newCard = { title, description };
-      setCards([newCard, ...cards]); // Add the new card to the beginning of the array
+      setCards([newCard, ...cards]);
       setModalVisible(false);
     }
+  };
+
+  const handleCardPress = (title, description) => {
+    navigation.navigate('Kanban', { title, description });
   };
 
   return (
@@ -67,7 +71,7 @@ export default function HomeScreen() {
           <BellIcon size={hp(4)} color="gray" />
         </View>
 
-        {/* greetings and punchline */}
+        {/* greetings */}
         <View style={{ marginHorizontal: 16, marginBottom: 10 }}>
           <Text style={{ fontSize: hp(2), color: "gray" }}>
             Olá, {currentUser?.use_name}!
@@ -115,6 +119,7 @@ export default function HomeScreen() {
                 key={index}
                 title={card.title}
                 description={card.description}
+                onPress={() => handleCardPress(card.title, card.description)}
               />
             ))}
           </View>

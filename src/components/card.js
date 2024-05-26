@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TrashIcon } from 'react-native-heroicons/outline';
 
-const CardComponent = ({ title, description, onDelete }) => {
+const CardComponent = ({ title, description, onDelete, onPress }) => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -10,9 +10,6 @@ const CardComponent = ({ title, description, onDelete }) => {
   };
 
   const handleDelete = () => {
-    // Implement your logic for handling delete here
-    // You can update the state or make an API call to delete the data
-    // For simplicity, we'll just log a message to the console
     console.log('Deleted:', title)
     setModalVisible(false);
     onDelete();
@@ -21,8 +18,10 @@ const CardComponent = ({ title, description, onDelete }) => {
   return (
     <View style={styles.cardContainer}>
       {/* Card Content */}
-      <Text style={styles.cardTitle}>{title}</Text>
-      <Text style={styles.cardDescription}>{description}</Text>
+      <TouchableOpacity onPress={onPress}>
+        <Text style={styles.cardTitle}>{title}</Text>
+        <Text style={styles.cardDescription}>{description}</Text>
+      </TouchableOpacity>
 
       {/* Trash Icon */}
       <TouchableOpacity onPress={toggleModal} style={styles.trashIconContainer}>

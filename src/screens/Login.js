@@ -26,7 +26,6 @@ const LoginScreen = () => {
   const [err, setErr] = useState("");
 
   const handleChangeLogin = (value, name) => {
-    console.log(value);
     setInputsLogin((prevData) => ({
       ...prevData,
       [name]: value,
