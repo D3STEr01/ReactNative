@@ -9,6 +9,7 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import Start from '../screens/StartScreen';
 import Perfil from '../screens/Perfil';
 import Kanban from '../screens/kanban';
+import Gadget from '../screens/Gadget';
 
 
 
@@ -24,6 +25,7 @@ function AppNavigation() {
         <Stack.Screen name='Login' component={Login} />
         <Stack.Screen name='Cadastro' component={Cadastro} />
         <Stack.Screen name='Kanban' component={Kanban} />
+        <Stack.Screen name='Gadget' component={Gadget} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Perfil" component={Perfil} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
