@@ -12,7 +12,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
+import { BellIcon, MagnifyingGlassIcon, Bars3Icon } from "react-native-heroicons/outline";
 import { AuthContext } from "../contexts/AuthContext";
 import CardComponent from "../components/card";
 import ModalCreate from "../components/ModalCreate";
@@ -40,6 +40,10 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
+
   const handleCardPress = (title, description) => {
     navigation.navigate('Kanban', { title, description });
   };
@@ -63,10 +67,7 @@ export default function HomeScreen({ navigation }) {
           }}
         >
           <Pressable onPress={toggleNavbar}>
-          <Image
-            source={require("../../assets/images/avatar.png")}
-            style={{ height: hp(5), width: hp(5.5), borderRadius: hp(2.75) }}
-          />
+          <Bars3Icon size={hp(4)} color="gray" />
           </Pressable>
           <BellIcon size={hp(4)} color="gray" />
         </View>
@@ -146,6 +147,7 @@ export default function HomeScreen({ navigation }) {
       <ModalCreate
         isModalVisible={isModalVisible}
         buttonAction={handleCreateCard}
+        onCancel={handleCancel}
       />
       <Navbar
        isVisible={isNavbarVisible}
