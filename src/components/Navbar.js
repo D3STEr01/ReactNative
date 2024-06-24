@@ -18,6 +18,11 @@ const Navbar = ({ isVisible, onClose }) => {
     onClose();
   };
 
+  const handleHomeNavigation = () => {
+    navigation.navigate('Home');
+    onClose();
+  };
+
   return (
     <Modal
       isVisible={isVisible}
@@ -35,7 +40,7 @@ const Navbar = ({ isVisible, onClose }) => {
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleHomeNavigation}>
             <Image
               source={require("../../assets/images/avatar.png")}
               style={{ height: hp(5), width: hp(5.5), borderRadius: hp(2.75) }}
