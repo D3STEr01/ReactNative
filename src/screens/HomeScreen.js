@@ -1,9 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
   ScrollView,
-  Image,
   TextInput,
   Pressable,
 } from "react-native";
@@ -17,12 +16,79 @@ import { AuthContext } from "../contexts/AuthContext";
 import CardComponent from "../components/card";
 import ModalCreate from "../components/ModalCreate";
 import Navbar from "../components/Navbar";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen({ navigation }) {
   const { currentUser, logout } = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isNavbarVisible, setNavbarVisible] = useState(false);
   const [cards, setCards] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const [filteredCards, setFilteredCards] = useState([]);
+
+  useEffect(() => {
+    loadCards();
+  }, []);
+
+  useEffect(() => {
+    if (!searchText) {
+      setFilteredCards(cards);
+    } else {
+      const filtered = cards.filter(card =>
+        card.title.toLowerCase().includes(searchText.toLowerCase()) ||
+        card.description.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredCards(filtered);
+    }
+  }, [searchText, cards]);
+
+  const loadCards = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const result = await AsyncStorage.multiGet(keys);
+      const loadedCards = result.map(req => JSON.parse(req[1]));
+      setCards(loadedCards);
+      setFilteredCards(loadedCards);
+    } catch (error) {
+      console.error('Failed to load cards', error);
+    }
+  };
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+    const filtered = cards.filter(card =>
+      card.title.toLowerCase().includes(text.toLowerCase()) ||
+      card.description.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredCards(filtered);
+  };
+  
+
+  const saveCard = async (card) => {
+    try {
+      const cardKey = `card_${new Date().getTime()}`;
+      await AsyncStorage.setItem(cardKey, JSON.stringify(card));
+      setCards([card, ...cards]);
+    } catch (error) {
+      console.error('Failed to save card', error);
+    }
+  };
+
+  const deleteCard = async (card) => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      for (const key of keys) {
+        const item = await AsyncStorage.getItem(key);
+        if (item && JSON.parse(item).title === card.title && JSON.parse(item).description === card.description) {
+          await AsyncStorage.removeItem(key);
+          break;
+        }
+      }
+      setCards(cards.filter(c => c.title !== card.title || c.description !== card.description));
+    } catch (error) {
+      console.error('Failed to delete card', error);
+    }
+  };
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -35,7 +101,7 @@ export default function HomeScreen({ navigation }) {
   const handleCreateCard = (title, description) => {
     if (title && description) {
       const newCard = { title, description };
-      setCards([newCard, ...cards]);
+      saveCard(newCard);
       setModalVisible(false);
     }
   };
@@ -45,7 +111,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   const handleCardPress = (title, description) => {
-    navigation.navigate('Kanban', { title, description });
+    navigation.navigate('Frames', { title, description });
   };
 
   return (
@@ -54,7 +120,7 @@ export default function HomeScreen({ navigation }) {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 180 }}
-        style={{ paddingTop: hp(14) }}
+        style={{ paddingTop: hp(9) }}
       >
         {/* avatar and bell icon */}
         <View
@@ -67,7 +133,7 @@ export default function HomeScreen({ navigation }) {
           }}
         >
           <Pressable onPress={toggleNavbar}>
-          <Bars3Icon size={hp(4)} color="gray" />
+            <Bars3Icon size={hp(4)} color="gray" />
           </Pressable>
           <BellIcon size={hp(4)} color="gray" />
         </View>
@@ -98,6 +164,7 @@ export default function HomeScreen({ navigation }) {
             placeholder="Pesquisar"
             placeholderTextColor={"gray"}
             style={{ flex: 1, fontSize: hp(1.7) }}
+            onChangeText={handleSearch}
           />
           <View
             style={{ backgroundColor: "white", borderRadius: 20, padding: 8 }}
@@ -109,17 +176,26 @@ export default function HomeScreen({ navigation }) {
         {/* main content */}
         <View style={{ flex: 1 }}>
           <View>
-          <Text style={{ fontSize: hp(2.5), fontWeight: "bold", color: "gray", textAlign:'center', marginBottom:10 }}>
-            Áreas de trabalho
-          </Text>
+            <Text style={{ fontSize: hp(2.5), fontWeight: "bold", color: "gray", textAlign:'center', marginBottom:10 }}>
+              Áreas de trabalho
+            </Text>
           </View>
           <View style={{ marginHorizontal: 16 }}>
             {/* Render existing cards */}
-            {cards.map((card, index) => (
+            {searchText ? filteredCards.map((card, index) => (
               <CardComponent
                 key={index}
                 title={card.title}
                 description={card.description}
+                onDelete={() => deleteCard(card)}
+                onPress={() => handleCardPress(card.title, card.description)}
+              />
+            )) : cards.map((card, index) => (
+              <CardComponent
+                key={index}
+                title={card.title}
+                description={card.description}
+                onDelete={() => deleteCard(card)}
                 onPress={() => handleCardPress(card.title, card.description)}
               />
             ))}
@@ -150,10 +226,9 @@ export default function HomeScreen({ navigation }) {
         onCancel={handleCancel}
       />
       <Navbar
-       isVisible={isNavbarVisible}
+        isVisible={isNavbarVisible}
         onClose={toggleNavbar}
       />
-      
     </View>
   );
 }

@@ -30,7 +30,7 @@ const SECTIONS = [
   {
     header: 'Conta',
     items: [
-      { id: 'save', icon: 'arrow-left', label: 'logout', type: 'link' },
+      { id: 'logout', icon: 'arrow-left', label: 'Logout', type: 'link' },
     ],
   },
 ];
@@ -41,12 +41,21 @@ export default function Profile({ navigation }) {
     darkMode: false,
   });
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, logout } = useContext(AuthContext);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error('Failed to logout', error);
+    }
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: '#f6f6f6' }}>
       <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity
+        <TouchableOpacity
           onPress={() => navigation.navigate('Home')}
           style={styles.goBackButton}
         >
@@ -92,7 +101,11 @@ export default function Profile({ navigation }) {
                     ]}>
                     <TouchableOpacity
                       onPress={() => {
-                        // handle onPress
+                        if (id === 'logout') {
+                          handleLogout();
+                        } else {
+                          // handle other onPress actions
+                        }
                       }}>
                       <View style={styles.row}>
                         <FeatherIcon

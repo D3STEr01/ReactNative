@@ -1,17 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { TrashIcon } from 'react-native-heroicons/outline';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const KanbanScreen = ({ route }) => {
-  const { title, description } = route.params;
+const KanbanScreen = () => {
   const navigation = useNavigation();
   const [tasks, setTasks] = useState({
-    todo: [{ id: 1, text: 'Sample Task' }],
+    todo: [],
     inProgress: [],
     done: [],
   });
   const [newTask, setNewTask] = useState('');
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const savedTasks = await AsyncStorage.getItem('kanbanTasks');
+        if (savedTasks !== null) {
+          setTasks(JSON.parse(savedTasks));
+        }
+      } catch (error) {
+        console.error("Failed to load tasks from storage", error);
+      }
+    };
+    loadTasks();
+  }, []);
+
+  const saveTasks = async (newTasks) => {
+    try {
+      await AsyncStorage.setItem('kanbanTasks', JSON.stringify(newTasks));
+    } catch (error) {
+      console.error("Failed to save tasks", error);
+    }
+  };
 
   const handleBackPress = () => {
     navigation.goBack();
@@ -19,43 +41,43 @@ const KanbanScreen = ({ route }) => {
 
   const addTask = () => {
     if (newTask.trim() !== '') {
-      setTasks(prevTasks => ({
-        ...prevTasks,
-        todo: [...prevTasks.todo, { id: Date.now(), text: newTask }],
-      }));
+      const newTasks = {
+        ...tasks,
+        todo: [...tasks.todo, { id: Date.now(), text: newTask }],
+      };
+      setTasks(newTasks);
+      saveTasks(newTasks);
       setNewTask('');
     }
   };
 
   const moveTask = (task, from, to) => {
-    setTasks(prevTasks => {
-      const fromTasks = prevTasks[from].filter(t => t.id !== task.id);
-      const toTasks = [...prevTasks[to], task];
-      return {
-        ...prevTasks,
-        [from]: fromTasks,
-        [to]: toTasks,
-      };
-    });
+    const newTasks = {
+      ...tasks,
+      [from]: tasks[from].filter(t => t.id !== task.id),
+      [to]: [...tasks[to], task],
+    };
+    setTasks(newTasks);
+    saveTasks(newTasks);
   };
 
   const deleteTask = (task, column) => {
-    setTasks(prevTasks => ({
-      ...prevTasks,
-      [column]: prevTasks[column].filter(t => t.id !== task.id),
-    }));
+    const newTasks = {
+      ...tasks,
+      [column]: tasks[column].filter(t => t.id !== task.id),
+    };
+    setTasks(newTasks);
+    saveTasks(newTasks);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{title}</Text>
         <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
           <Text style={styles.backButtonText}>X</Text>
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.description}>Descrição: {description}</Text>
         <View style={styles.newTaskContainer}>
           <TextInput
             style={styles.input}
