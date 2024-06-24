@@ -10,6 +10,7 @@ import Start from '../screens/StartScreen';
 import Perfil from '../screens/Perfil';
 import Kanban from '../screens/kanban';
 import Gadget from '../screens/Gadget';
+import Frames from '../screens/Frames';
 
 
 
@@ -24,6 +25,7 @@ function AppNavigation() {
         <Stack.Screen name='Start' component={Start} />
         <Stack.Screen name='Login' component={Login} />
         <Stack.Screen name='Cadastro' component={Cadastro} />
+        <Stack.Screen name='Frames' component={Frames} />
         <Stack.Screen name='Kanban' component={Kanban} />
         <Stack.Screen name='Gadget' component={Gadget} />
         <Stack.Screen name="Home" component={HomeScreen} />
